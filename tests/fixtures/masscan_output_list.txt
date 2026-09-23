@@ -1,0 +1,3 @@
+# masscan-list-format v1
+open tcp 22 93.184.216.34 1700000000
+open tcp 80 93.184.216.34 1700000001

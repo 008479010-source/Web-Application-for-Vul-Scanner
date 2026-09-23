@@ -1,0 +1,19 @@
+{
+  "resultsPerPage": 20,
+  "totalResults": 1,
+  "vulnerabilities": [
+    {
+      "cve": {
+        "id": "CVE-2021-41773",
+        "descriptions": [
+          {"lang": "en", "value": "A flaw was found in a change made to path normalization in Apache HTTP Server 2.4.49."}
+        ],
+        "metrics": {
+          "cvssMetricV31": [
+            {"cvssData": {"baseScore": 9.8, "baseSeverity": "CRITICAL"}}
+          ]
+        }
+      }
+    }
+  ]
+}

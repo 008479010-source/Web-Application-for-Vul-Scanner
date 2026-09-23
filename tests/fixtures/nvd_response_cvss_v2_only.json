@@ -1,0 +1,19 @@
+{
+  "resultsPerPage": 20,
+  "totalResults": 1,
+  "vulnerabilities": [
+    {
+      "cve": {
+        "id": "CVE-1999-0001",
+        "descriptions": [
+          {"lang": "en", "value": "An old vulnerability with only a CVSSv2 score available."}
+        ],
+        "metrics": {
+          "cvssMetricV2": [
+            {"cvssData": {"baseScore": 5.0}}
+          ]
+        }
+      }
+    }
+  ]
+}

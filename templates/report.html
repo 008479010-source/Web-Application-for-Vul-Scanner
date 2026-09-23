@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vuln Scan Report — {{ job.id }}</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a0f0f'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%23ff6b57' text-anchor='middle'%3E!%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --ink: #1a1d24; --dim: #5b6270; --line: #d8dce2; --bg-soft: #f4f6f8;
+    --critical: #b3261e; --high: #c2410c; --medium: #b7791f; --low: #2563eb; --info: #64748b; --none: #16a34a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--ink);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+    line-height: 1.55;
+    background: #fff;
+  }
+  h1, h2, h3 { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+  h1 { font-size: 26px; margin-bottom: 4px; }
+  h2 {
+    font-size: 17px; text-transform: uppercase; letter-spacing: 0.04em;
+    border-bottom: 2px solid var(--ink); padding-bottom: 6px; margin-top: 42px;
+  }
+  h3 { font-size: 15px; margin-bottom: 6px; }
+  .subtitle { color: var(--dim); font-size: 14px; margin-bottom: 28px; }
+  .meta-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 14px 0; }
+  .meta-table th { text-align: left; color: var(--dim); font-weight: 600; padding: 5px 12px 5px 0; white-space: nowrap; vertical-align: top; width: 220px; }
+  .meta-table td { padding: 5px 0; }
+  .banner {
+    background: #fff4f2; border: 1px solid #f3c5bb; border-radius: 6px;
+    padding: 14px 18px; font-size: 13px; color: #7a2e1f; margin: 16px 0;
+  }
+  .severity-summary { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0; }
+  .sev-pill {
+    border-radius: 8px; padding: 10px 16px; min-width: 84px; text-align: center;
+    font-family: -apple-system, sans-serif; border: 1px solid var(--line);
+  }
+  .sev-pill .count { font-size: 22px; font-weight: 700; display: block; }
+  .sev-pill .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--dim); }
+  .sev-badge {
+    display: inline-block; font-family: -apple-system, sans-serif; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.03em; padding: 2px 9px; border-radius: 999px; color: #fff;
+  }
+  .sev-critical { background: var(--critical); } .sev-high { background: var(--high); }
+  .sev-medium { background: var(--medium); } .sev-low { background: var(--low); }
+  .sev-info { background: var(--info); } .sev-none { background: var(--none); }
+  table.data { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0 20px; }
+  table.data th, table.data td { border-bottom: 1px solid var(--line); padding: 7px 10px; text-align: left; vertical-align: top; }
+  table.data th { background: var(--bg-soft); font-family: -apple-system, sans-serif; font-size: 11.5px; text-transform: uppercase; color: var(--dim); }
+  .methodology-item { border: 1px solid var(--line); border-radius: 6px; padding: 14px 18px; margin-bottom: 12px; }
+  .methodology-item .phase { font-family: -apple-system, sans-serif; font-weight: 700; font-size: 13px; }
+  .methodology-item ul { margin: 8px 0 0; padding-left: 20px; font-size: 12.5px; color: var(--dim); }
+  .target-block { border: 1px solid var(--line); border-radius: 6px; margin-bottom: 22px; overflow: hidden; }
+  .target-block-header {
+    background: var(--bg-soft); padding: 10px 16px; font-family: -apple-system, sans-serif;
+    font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .target-block-body { padding: 4px 18px 16px; }
+  .finding-row td { font-size: 12.5px; }
+  .recommendation { border-left: 3px solid var(--ink); padding: 6px 0 6px 14px; margin: 10px 0; font-size: 13.5px; }
+  .appendix pre {
+    background: var(--bg-soft); border: 1px solid var(--line); border-radius: 6px; padding: 14px;
+    font-size: 11px; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+  }
+  .footer-note { color: var(--dim); font-size: 11.5px; margin-top: 60px; border-top: 1px solid var(--line); padding-top: 12px; }
+  @media print {
+    .no-print { display: none; }
+    body { padding: 0; }
+  }
+  .print-btn {
+    font-family: -apple-system, sans-serif; font-size: 13px; padding: 8px 16px; border-radius: 6px;
+    border: 1px solid var(--ink); background: #fff; cursor: pointer; margin-bottom: 24px;
+  }
+</style>
+</head>
+<body>
+
+  <button class="print-btn no-print" onclick="window.print()">Print / Save as PDF</button>
+
+  <h1>Vulnerability Assessment Report</h1>
+  <div class="subtitle">
+    Job {{ job.id }} &middot; Generated {{ generated_at }}
+  </div>
+
+  <div class="banner">
+    This scan used <strong>active</strong> vulnerability-detection techniques (nmap NSE vuln scripts, nikto)
+    which are intrusive and detectable by the target's own monitoring — this is not passive reconnaissance.
+    CVE matches are candidate matches from a free-text NVD keyword search and require human verification, not
+    confirmed vulnerabilities. This report is a starting point for analyst review, not a substitute for manual
+    validation or professional judgment.
+  </div>
+
+  <h2>1. Scope &amp; Authorization</h2>
+  {% if engagement %}
+  <table class="meta-table">
+    <tr><th>Client</th><td>{{ engagement.client_name }}</td></tr>
+    <tr><th>Engagement</th><td>{{ engagement.engagement_name }}</td></tr>
+    <tr><th>Scope</th><td>{{ engagement.scope_description }}</td></tr>
+    <tr><th>Authorized by</th><td>{{ engagement.authorized_by }}</td></tr>
+    <tr><th>Authorization date</th><td>{{ engagement.authorization_date }}</td></tr>
+    <tr><th>Testing window</th><td>{{ engagement.testing_window_start }} &rarr; {{ engagement.testing_window_end }}</td></tr>
+    {% if engagement.rules_of_engagement %}
+    <tr><th>Rules of engagement</th><td>{{ engagement.rules_of_engagement }}</td></tr>
+    {% endif %}
+    {% if engagement.contact_name %}
+    <tr><th>Primary contact</th><td>{{ engagement.contact_name }}{% if engagement.contact_email %} ({{ engagement.contact_email }}){% endif %}</td></tr>
+    {% endif %}
+    <tr><th>Engagement ID</th><td>{{ engagement.id }}</td></tr>
+  </table>
+  {% else %}
+  <p><em>No Scope &amp; Authorization record is linked to this job.</em></p>
+  {% endif %}
+
+  <h2>2. Executive Summary</h2>
+  <p>
+    {{ executive_summary.targets_tested }} target(s) were assessed;
+    {{ executive_summary.targets_with_findings }} produced at least one risk finding.
+    Overall highest severity observed:
+    <span class="sev-badge sev-{{ executive_summary.highest_overall_severity }}">{{ severity_label[executive_summary.highest_overall_severity] }}</span>
+  </p>
+  <div class="severity-summary">
+    {% for sev in severity_order %}
+    <div class="sev-pill">
+      <span class="count">{{ executive_summary.severity_counts.get(sev, 0) }}</span>
+      <span class="label">{{ severity_label[sev] }}</span>
+    </div>
+    {% endfor %}
+  </div>
+
+  <h2>3. Methodology</h2>
+  <p>Vuln Scan Toolkit's modules map to established vulnerability-analysis frameworks as follows:</p>
+  {% for section in methodology_sections %}
+  <div class="methodology-item">
+    <div class="phase">{{ section.phase }}</div>
+    <div>{{ section.description }}</div>
+    <ul>
+      {% for standard in section.standards %}
+      <li>{{ standard }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+
+  <h2>4. Findings by Target</h2>
+  {% for target, results in job.results.items() %}
+  {% set risk = results.get("risk", {}) %}
+  {% set pd = results.get("portdiscovery", {}) %}
+  <div class="target-block">
+    <div class="target-block-header">
+      <span>{{ target }}</span>
+      <span class="sev-badge sev-{{ risk.get('highest_severity', 'none') }}">{{ severity_label.get(risk.get('highest_severity', 'none'), 'None') }}</span>
+    </div>
+    <div class="target-block-body">
+      {% if risk.get("findings") %}
+      <table class="data">
+        <tr><th>Severity</th><th>Finding</th><th>Description</th><th>Evidence / CVE</th></tr>
+        {% for f in risk.findings %}
+        <tr class="finding-row">
+          <td><span class="sev-badge sev-{{ f.severity }}">{{ severity_label[f.severity] }}</span></td>
+          <td>{{ f.title }}</td>
+          <td>{{ f.description }}</td>
+          <td>{{ (f.cve_ids | join(", ")) or f.evidence or "—" }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p><em>No risk findings flagged for this target based on the modules run.</em></p>
+      {% endif %}
+
+      {% if pd.get("open_ports") %}
+      <h3>Open ports &amp; detected services ({{ pd.discovery_method }})</h3>
+      <table class="data">
+        <tr><th>Port</th><th>Service</th><th>Product / Version</th></tr>
+        {% for p in pd.open_ports %}
+        <tr><td>{{ p.port }}/{{ p.protocol }}</td><td>{{ p.service or "—" }}</td><td>{{ p.banner or "—" }}</td></tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+
+  <h2>5. Recommendations</h2>
+  {% if recommendations %}
+    {% for rec in recommendations %}
+    <div class="recommendation"><strong>{{ rec.category.replace("-", " ") | title }}:</strong> {{ rec.text }}</div>
+    {% endfor %}
+  {% else %}
+  <p><em>No specific remediation items were generated from this scan's findings.</em></p>
+  {% endif %}
+
+  <h2>6. Appendix — Raw Scan Data</h2>
+  <div class="appendix">
+    <p style="font-size:12.5px;">
+      Job created: {{ job.created_at }} &middot; Finished: {{ job.finished_at or "in progress" }} &middot;
+      Modules run: {{ job.modules | join(", ") }}
+    </p>
+    <pre>{{ job.results | tojson(indent=2) }}</pre>
+  </div>
+
+  <div class="footer-note">
+    Generated by Vuln Scan Toolkit. For authorized security testing only — see the Scope &amp; Authorization
+    section above for the terms this scan was conducted under.
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<niktoscan>
+  <scandetails targetip="93.184.216.34" targethostname="example.com" targetport="80">
+    <item id="1" osvdbid="0" method="GET">
+      <description>The X-Content-Type-Options header is not set. This could allow the user agent to render the content in a different fashion than the MIME type.</description>
+      <uri>/</uri>
+      <namelink>http://example.com/</namelink>
+    </item>
+    <item id="2" osvdbid="12184" method="GET">
+      <description>Default account found for 'admin' (ID 'admin', PW 'admin') - default credential exposure.</description>
+      <uri>/admin/</uri>
+      <namelink>http://example.com/admin/</namelink>
+    </item>
+  </scandetails>
+</niktoscan>

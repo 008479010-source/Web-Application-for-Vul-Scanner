@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<nmaprun scanner="nmap">
+  <host>
+    <address addr="93.184.216.34" addrtype="ipv4"/>
+    <hostscript>
+      <script id="smb-vuln-ms17-010" output="Host script execution results are NOT VULNERABLE"/>
+    </hostscript>
+    <ports>
+      <port protocol="tcp" portid="80">
+        <state state="open"/>
+        <script id="http-vuln-cve2021-41773" output="VULNERABLE:&#10;Apache Path Traversal, CVE-2021-41773&#10;State: VULNERABLE"/>
+      </port>
+      <port protocol="tcp" portid="22">
+        <state state="open"/>
+        <script id="ssh2-enum-algos" output="Some informational output, no verdict here"/>
+      </port>
+    </ports>
+  </host>
+</nmaprun>
